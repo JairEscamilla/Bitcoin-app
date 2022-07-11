@@ -1,3 +1,4 @@
+import { concatMap } from 'rxjs/operators';
 import { ICoinbaseResponse } from '@core/models/coinbase-response.model';
 import { DatesUtility } from '@core/utils/Dates.utility';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -78,6 +79,17 @@ export class HomePage implements OnInit, OnDestroy {
   handlePriceClick(price: IPrice) {
     this.isModalOpen = true;
     this.listOfDetailedPrices = [price];
+    this.pricesService
+      .fetchPrice('EUR', price.date)
+      .pipe(
+        concatMap(({ data }) => {
+          this.listOfDetailedPrices = [...this.listOfDetailedPrices, data];
+          return this.pricesService.fetchPrice('COP', price.date);
+        })
+      )
+      .subscribe(({ data }) => {
+        this.listOfDetailedPrices = [...this.listOfDetailedPrices, data];
+      });
   }
 
   closeModal() {
