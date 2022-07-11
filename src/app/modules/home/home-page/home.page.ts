@@ -1,7 +1,9 @@
+import { ICoinbaseResponse } from '@core/models/coinbase-response.model';
 import { DatesUtility } from '@core/utils/Dates.utility';
 import { Component, OnInit } from '@angular/core';
 import { PricesService } from '@core/services/prices.service';
 import { IPrice } from '@core/models/price.model';
+import { forkJoin, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,20 +14,45 @@ export class HomePage implements OnInit {
   listOfPrices: Array<IPrice & { date: Date }> = [];
   weeeksToShow = 2;
   numberOfDaysToShow = this.weeeksToShow * DatesUtility.numberOfDaysPerWeek;
+  isLoading = false;
 
   constructor(private pricesService: PricesService) {}
 
   ngOnInit() {
-    const priceDate = new Date();
-    for (let i = 0; i < this.numberOfDaysToShow; i++) {
-      this.fetchPrices(priceDate);
-      priceDate.setDate(priceDate.getDate() - 1);
-    }
+    this.fetchPrices();
   }
 
-  fetchPrices(priceDate: Date) {
-    this.pricesService.fetchPrice('USD', priceDate).subscribe(({ data }) => {
-      console.log(data);
-    });
+  fetchPrices() {
+    this.isLoading = true;
+    const auxiliarDate = new Date();
+    // Arreglo de observables de las peticiones a coinbase
+    let prices$: Observable<ICoinbaseResponse<IPrice>>[] = [];
+    // Arreglo de las fechas en que se recuperan los precios
+    let priceDates: Date[] = [];
+
+    // Para cada dia, se obtiene el observador que hace la peticion a coinbase
+    for (let i = 0; i < this.numberOfDaysToShow; i++) {
+      prices$ = [
+        ...prices$,
+        this.pricesService.fetchPrice('USD', auxiliarDate),
+      ];
+      priceDates = [...priceDates, new Date(auxiliarDate)];
+      auxiliarDate.setDate(auxiliarDate.getDate() - 1);
+    }
+
+    forkJoin(prices$).subscribe(
+      (prices) => {
+        prices.forEach(({ data }, index) => {
+          this.listOfPrices = [
+            ...this.listOfPrices,
+            { ...data, date: priceDates[index] },
+          ];
+        });
+        this.isLoading = false;
+      },
+      () => {
+        this.isLoading = false;
+      }
+    );
   }
 }

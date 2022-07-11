@@ -1,0 +1,20 @@
+<ion-card>
+  <ion-item>
+    <ion-label>
+      <h2>
+        <ion-icon name="cash-outline" color="success" class="icon"></ion-icon>
+        <span class="price">
+          {{ price.amount | currency }} {{ price.currency }}
+        </span>
+      </h2>
+      <h5>
+        <ion-icon name="calendar-outline" color="primary" class="icon"></ion-icon>
+
+        <span class="date">
+          {{ price.date | date }}
+        </span>
+      </h5>
+    </ion-label>
+  </ion-item>
+
+</ion-card>
