@@ -1,7 +1,7 @@
 # Bitcoin app
 It´s an app to check bitcoin prices for the last two weeks in different currencies like USD, EUR and COP
 
-## Installation
+## Instructions to run the app
 In order to run the application, run the following commands:
 ```console
 foo@bar:~$ npm i
