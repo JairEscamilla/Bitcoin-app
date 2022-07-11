@@ -14,6 +14,9 @@
       <ion-list lines="none">
         <ion-grid>
           <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <p class="error-message" style="margin-top: 20px;" *ngIf="existsDetailError">
+            An error
+            occurred while loading data, and there is not previous saved information</p>
           <ion-row *ngIf="!isLoading">
             <ion-col size="8" offset="2" *ngFor="let price of detailedPrices">
               <ion-card>

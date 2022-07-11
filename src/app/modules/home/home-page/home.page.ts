@@ -23,6 +23,7 @@ export class HomePage implements OnInit, OnDestroy {
   isModalOpen = false;
   isModalDataLoading = false;
   existsError = false;
+  existsDetailError = false;
 
   constructor(private pricesService: PricesService, private storage: Storage) {}
 
@@ -44,6 +45,7 @@ export class HomePage implements OnInit, OnDestroy {
     let prices$: Observable<ICoinbaseResponse<IPrice>>[] = [];
     // Arreglo de las fechas en que se recuperan los precios
     let priceDates: Date[] = [];
+    this.existsError = false;
 
     // Para cada dia, se obtiene el observador que hace la peticion a coinbase
     for (let i = 0; i < this.numberOfDaysToShow; i++) {
@@ -87,6 +89,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.isModalOpen = true;
     this.isModalDataLoading = true;
     this.listOfDetailedPrices = [price];
+    this.existsDetailError = false;
     this.pricesService
       .fetchPrice('EUR', price.date)
       .pipe(
@@ -99,13 +102,19 @@ export class HomePage implements OnInit, OnDestroy {
         async ({ data }) => {
           this.listOfDetailedPrices = [...this.listOfDetailedPrices, data];
           await this.storage.set(
-            price.date.toString(),
+            DatesUtility.dateToUTC(price.date),
             this.listOfDetailedPrices
           );
           this.isModalDataLoading = false;
         },
-        () => {
+        async () => {
+          this.existsDetailError = true;
           this.isModalDataLoading = false;
+          this.listOfDetailedPrices = [];
+          this.listOfDetailedPrices = await this.storage.get(
+            DatesUtility.dateToUTC(price.date)
+          );
+          console.log(this.existsDetailError);
         }
       );
   }

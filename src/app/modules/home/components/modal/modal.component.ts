@@ -10,7 +10,9 @@ export class ModalComponent implements OnInit {
   @Input() isOpen = false;
   @Input() detailedPrices: IPrice[] = [];
   @Input() isLoading = false;
+  @Input() existsDetailError = false;
   @Output() handleClose = new EventEmitter();
+
   constructor() {}
 
   ngOnInit() {}
