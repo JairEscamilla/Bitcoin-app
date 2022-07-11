@@ -11,12 +11,12 @@ import { DatesUtility } from '@core/utils/Dates.utility';
 export class PricesService {
   constructor(private httpService: HttpClient) {}
 
-  fetchPrice(currency: string, date: Date) {
+  fetchPrice(currency: string, date?: Date) {
     return this.httpService.get<ICoinbaseResponse<IPrice>>(
       `${environment.apiBaseUrl}/prices/BTC-${currency}/spot`,
       {
         params: {
-          date: DatesUtility.dateToUTC(date),
+          date: DatesUtility.dateToUTC(date ? date : new Date()),
         },
       }
     );
