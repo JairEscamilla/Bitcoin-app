@@ -7,9 +7,8 @@ import { IPrice } from '@core/models/price.model';
   styleUrls: ['./price-list-item.component.scss'],
 })
 export class PriceListItemComponent implements OnInit {
-  @Input() price: IPrice & { date: Date };
+  @Input() price: IPrice;
   constructor() {}
 
   ngOnInit() {}
-  pruebas() {}
 }

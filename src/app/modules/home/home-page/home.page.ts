@@ -11,12 +11,14 @@ import { forkJoin, Observable } from 'rxjs';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit, OnDestroy {
-  listOfPrices: Array<IPrice & { date: Date }> = [];
+  listOfPrices: IPrice[] = [];
+  listOfDetailedPrices: IPrice[] = [];
   weeeksToShow = 2;
   numberOfDaysToShow = this.weeeksToShow * DatesUtility.numberOfDaysPerWeek;
   isLoading = false;
   refreshTimeInSeconds = 60;
   intervalId: number;
+  isModalOpen = false;
 
   constructor(private pricesService: PricesService) {}
 
@@ -71,5 +73,14 @@ export class HomePage implements OnInit, OnDestroy {
         this.listOfPrices[0].amount = data.amount;
       });
     }, this.refreshTimeInSeconds * 1000);
+  }
+
+  handlePriceClick(price: IPrice) {
+    this.isModalOpen = true;
+    this.listOfDetailedPrices = [price];
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
   }
 }
