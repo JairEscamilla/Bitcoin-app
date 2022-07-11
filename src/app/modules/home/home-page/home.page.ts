@@ -114,7 +114,6 @@ export class HomePage implements OnInit, OnDestroy {
           this.listOfDetailedPrices = await this.storage.get(
             DatesUtility.dateToUTC(price.date)
           );
-          console.log(this.existsDetailError);
         }
       );
   }
