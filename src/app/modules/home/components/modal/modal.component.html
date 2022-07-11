@@ -1,4 +1,4 @@
-<ion-modal [isOpen]="isOpen">
+<ion-modal [isOpen]="isOpen" (didDismiss)="handleCloseModal()">
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -6,7 +6,7 @@
           {{ detailedPrices[0]?.date | date }} prices
         </ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="handleCloseButton()">Close</ion-button>
+          <ion-button (click)="handleCloseModal()">Close</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
