@@ -22,6 +22,7 @@ export class HomePage implements OnInit, OnDestroy {
   intervalId: number;
   isModalOpen = false;
   isModalDataLoading = false;
+  existsError = false;
 
   constructor(private pricesService: PricesService, private storage: Storage) {}
 
@@ -62,13 +63,14 @@ export class HomePage implements OnInit, OnDestroy {
             { ...data, date: priceDates[index] },
           ];
         });
-        console.log(this.listOfPrices);
         await this.storage.set('listOfPrices', this.listOfPrices);
         this.isLoading = false;
         this.refreshCurrentDayPrice();
       },
-      () => {
+      async () => {
         this.isLoading = false;
+        this.existsError = true;
+        this.listOfPrices = await this.storage.get('listOfPrices');
       }
     );
   }

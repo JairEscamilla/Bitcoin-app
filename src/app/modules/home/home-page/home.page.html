@@ -7,6 +7,10 @@
     </ion-list-header>
     <ion-grid>
       <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+      <p class="error-message" style="margin-top: 20px;" *ngIf="existsError">An error occurred while loading data, it is
+        possible that you
+        are not seeing updated
+        information</p>
       <ion-row *ngIf="!isLoading">
         <ion-col size="6" *ngFor="let price of listOfPrices">
           <ion-card (click)="handlePriceClick(price)">
