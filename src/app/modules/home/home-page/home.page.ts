@@ -5,6 +5,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PricesService } from '@core/services/prices.service';
 import { IPrice } from '@core/models/price.model';
 import { forkJoin, Observable } from 'rxjs';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-home',
@@ -22,9 +23,10 @@ export class HomePage implements OnInit, OnDestroy {
   isModalOpen = false;
   isModalDataLoading = false;
 
-  constructor(private pricesService: PricesService) {}
+  constructor(private pricesService: PricesService, private storage: Storage) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.storage.create();
     this.fetchPrices();
   }
 
@@ -53,13 +55,15 @@ export class HomePage implements OnInit, OnDestroy {
     }
 
     forkJoin(prices$).subscribe(
-      (prices) => {
+      async (prices) => {
         prices.forEach(({ data }, index) => {
           this.listOfPrices = [
             ...this.listOfPrices,
             { ...data, date: priceDates[index] },
           ];
         });
+        console.log(this.listOfPrices);
+        await this.storage.set('listOfPrices', this.listOfPrices);
         this.isLoading = false;
         this.refreshCurrentDayPrice();
       },
@@ -90,8 +94,12 @@ export class HomePage implements OnInit, OnDestroy {
         })
       )
       .subscribe(
-        ({ data }) => {
+        async ({ data }) => {
           this.listOfDetailedPrices = [...this.listOfDetailedPrices, data];
+          await this.storage.set(
+            price.date.toString(),
+            this.listOfDetailedPrices
+          );
           this.isModalDataLoading = false;
         },
         () => {
