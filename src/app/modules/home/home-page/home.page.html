@@ -6,7 +6,8 @@
       </ion-label>
     </ion-list-header>
     <ion-grid>
-      <ion-row>
+      <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+      <ion-row *ngIf="!isLoading">
         <ion-col size="6" *ngFor="let price of listOfPrices">
           <ion-card (click)="handlePriceClick(price)">
             <app-price-list-item [price]="price"></app-price-list-item>
@@ -15,6 +16,7 @@
       </ion-row>
     </ion-grid>
   </ion-list>
-  <app-modal [isOpen]=" isModalOpen" (handleClose)="closeModal()" [detailedPrices]="listOfDetailedPrices">
+  <app-modal [isOpen]=" isModalOpen" (handleClose)="closeModal()" [detailedPrices]="listOfDetailedPrices"
+    [isLoading]="isModalDataLoading">
   </app-modal>
 </ion-content>

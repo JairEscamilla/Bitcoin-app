@@ -20,6 +20,7 @@ export class HomePage implements OnInit, OnDestroy {
   refreshTimeInSeconds = 60;
   intervalId: number;
   isModalOpen = false;
+  isModalDataLoading = false;
 
   constructor(private pricesService: PricesService) {}
 
@@ -78,6 +79,7 @@ export class HomePage implements OnInit, OnDestroy {
 
   handlePriceClick(price: IPrice) {
     this.isModalOpen = true;
+    this.isModalDataLoading = true;
     this.listOfDetailedPrices = [price];
     this.pricesService
       .fetchPrice('EUR', price.date)
@@ -87,9 +89,15 @@ export class HomePage implements OnInit, OnDestroy {
           return this.pricesService.fetchPrice('COP', price.date);
         })
       )
-      .subscribe(({ data }) => {
-        this.listOfDetailedPrices = [...this.listOfDetailedPrices, data];
-      });
+      .subscribe(
+        ({ data }) => {
+          this.listOfDetailedPrices = [...this.listOfDetailedPrices, data];
+          this.isModalDataLoading = false;
+        },
+        () => {
+          this.isModalDataLoading = false;
+        }
+      );
   }
 
   closeModal() {

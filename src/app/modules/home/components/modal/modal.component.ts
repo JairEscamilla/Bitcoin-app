@@ -9,6 +9,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class ModalComponent implements OnInit {
   @Input() isOpen = false;
   @Input() detailedPrices: IPrice[] = [];
+  @Input() isLoading = false;
   @Output() handleClose = new EventEmitter();
   constructor() {}
 

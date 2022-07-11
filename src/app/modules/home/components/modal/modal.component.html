@@ -13,7 +13,8 @@
     <ion-content>
       <ion-list lines="none">
         <ion-grid>
-          <ion-row>
+          <ion-spinner name="crescent" *ngIf="isLoading"></ion-spinner>
+          <ion-row *ngIf="!isLoading">
             <ion-col size="8" offset="2" *ngFor="let price of detailedPrices">
               <ion-card>
                 <app-price-list-item [price]="price" variant="secondary"></app-price-list-item>
