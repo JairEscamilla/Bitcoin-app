@@ -10,12 +10,18 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae ducimus quos
-        reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo sit cum qui. Eaque,
-        dicta.
-      </p>
+    <ion-content>
+      <ion-list lines="none">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="8" offset="2" *ngFor="let price of detailedPrices">
+              <ion-card>
+                <app-price-list-item [price]="price" variant="secondary"></app-price-list-item>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-list>
     </ion-content>
   </ng-template>
 </ion-modal>

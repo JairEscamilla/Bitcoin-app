@@ -8,6 +8,7 @@ import { IPrice } from '@core/models/price.model';
 })
 export class PriceListItemComponent implements OnInit {
   @Input() price: IPrice;
+  @Input() variant: 'primary' | 'secondary' = 'primary';
   constructor() {}
 
   ngOnInit() {}
